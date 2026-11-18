@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class ConveyorMovement : MonoBehaviour
 {
-    public GameObject entry, exit;
-    public ConveyorMovement nextConveyor;
+    public GameObject entry, exit, groundAnchor;
+    public ConveyorMovement nextConveyor, prevConveyor;
     private List<ConveyorItem> itemsOnConveyor = new List<ConveyorItem>();
     public float speed =1.0f;
     private float pathDistance = 0.0f;

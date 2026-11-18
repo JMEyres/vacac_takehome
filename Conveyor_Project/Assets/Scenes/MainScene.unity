@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
+  - component: {fileID: 330585548}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -205,13 +206,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 330585543}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: 0.5658842, z: -0, w: 0.8244848}
-  m_LocalPosition: {x: -5.556, y: 0.576, z: -2.248}
+  m_LocalRotation: {x: 0.06238819, y: 0.5642618, z: -0.042820074, w: 0.8221209}
+  m_LocalPosition: {x: -7.781, y: 1.94, z: -3.105}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 68.927, z: 0}
+  m_LocalEulerAnglesHint: {x: 8.679, y: 68.927, z: 0}
 --- !u!114 &330585547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -256,6 +257,29 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &330585548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab87e32145ce02846a08b78fa9f768e9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlacementController
+  beltPrefabs:
+  - {fileID: 8457312205878529345, guid: 064a7db884a0e964788084c7a1de7d4f, type: 3}
+  - {fileID: 7385515334536902971, guid: 58abe69b6b6c5f5488656c13c1ae5072, type: 3}
+  - {fileID: 8977976444213254413, guid: 548e0f2dac8f4e641a47e6088ad8dc55, type: 3}
+  - {fileID: 7385515334536902971, guid: 414ac3c951f88354081f770b68e440b8, type: 3}
+  placedConveyors: []
+  yawStep: 15
+  snapRadius: 1
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -655,7 +679,7 @@ GameObject:
   - component: {fileID: 1153420849}
   - component: {fileID: 1153420848}
   - component: {fileID: 1153420847}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
