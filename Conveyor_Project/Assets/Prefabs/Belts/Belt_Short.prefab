@@ -57,7 +57,7 @@ Transform:
   m_GameObject: {fileID: 3177304647987619064}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.095, z: 0.609}
+  m_LocalPosition: {x: 0, y: 0.095, z: 0.666}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -75,8 +75,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e55edc4591b2da4fb2aad42d5ce3846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Port
-  anchor: {fileID: 305315541288236164}
   isOccupied: 0
+  connectedPort: {fileID: 0}
 --- !u!1 &6480264244178432757
 GameObject:
   m_ObjectHideFlags: 0
@@ -121,8 +121,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5e55edc4591b2da4fb2aad42d5ce3846, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Port
-  anchor: {fileID: 2623321904486562916}
   isOccupied: 0
+  connectedPort: {fileID: 0}
 --- !u!1 &8977976444213254413
 GameObject:
   m_ObjectHideFlags: 0
