@@ -40,6 +40,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 414670973071053293}
+  - component: {fileID: 2896326728922387780}
   m_Layer: 0
   m_Name: Exit_Socket
   m_TagString: Untagged
@@ -62,6 +63,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5234920747693833047}
   m_LocalEulerAnglesHint: {x: -20, y: 0, z: 0}
+--- !u!114 &2896326728922387780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6365360569805022524}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e55edc4591b2da4fb2aad42d5ce3846, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Port
+  anchor: {fileID: 414670973071053293}
+  isOccupied: 0
 --- !u!1 &6954116946298627088
 GameObject:
   m_ObjectHideFlags: 0
@@ -71,6 +86,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2933101129372212103}
+  - component: {fileID: 7021016111913828010}
   m_Layer: 0
   m_Name: Entry_Socket
   m_TagString: Untagged
@@ -93,6 +109,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 5234920747693833047}
   m_LocalEulerAnglesHint: {x: -20, y: 0, z: 0}
+--- !u!114 &7021016111913828010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6954116946298627088}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5e55edc4591b2da4fb2aad42d5ce3846, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Port
+  anchor: {fileID: 2933101129372212103}
+  isOccupied: 0
 --- !u!1 &7023533200829513235
 GameObject:
   m_ObjectHideFlags: 0
@@ -156,6 +186,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5234920747693833047}
   - component: {fileID: 1884613221902725748}
+  - component: {fileID: 4989279385106806680}
   m_Layer: 0
   m_Name: Belt_Incline
   m_TagString: Untagged
@@ -199,7 +230,25 @@ MonoBehaviour:
   exit: {fileID: 6365360569805022524}
   groundAnchor: {fileID: 4066317341855910842}
   nextConveyor: {fileID: 0}
+  prevConveyor: {fileID: 0}
   speed: 1
+--- !u!114 &4989279385106806680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7385515334536902971}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8cb1895e106b54d47bc6e2a48c125086, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Placeable
+  groundAnchor: {fileID: 9045282013152647582}
+  entries:
+  - {fileID: 7021016111913828010}
+  exits:
+  - {fileID: 2896326728922387780}
 --- !u!1001 &6194507277380210304
 PrefabInstance:
   m_ObjectHideFlags: 0

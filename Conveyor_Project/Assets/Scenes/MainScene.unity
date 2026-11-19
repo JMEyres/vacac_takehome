@@ -681,16 +681,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ab87e32145ce02846a08b78fa9f768e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlacementController
-  beltPrefabs:
+  prefabs:
   - {fileID: 8457312205878529345, guid: 064a7db884a0e964788084c7a1de7d4f, type: 3}
   - {fileID: 8977976444213254413, guid: 548e0f2dac8f4e641a47e6088ad8dc55, type: 3}
   - {fileID: 7385515334536902971, guid: 58abe69b6b6c5f5488656c13c1ae5072, type: 3}
   - {fileID: 7385515334536902971, guid: 414ac3c951f88354081f770b68e440b8, type: 3}
-  spawnerPrefabs:
   - {fileID: 7061019063582050521, guid: f20865c6e8f1dbf4caf6cd58c82588c8, type: 3}
   - {fileID: 7061019063582050521, guid: 476594241b3b8f14287066fa8546d798, type: 3}
-  placedConveyors: []
-  placedSpawners: []
+  placedObjects: []
   yawStep: 15
   snapRadius: 1
   groundLayer:
@@ -1061,12 +1059,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 330585548}
         m_TargetAssemblyTypeName: PlacementController, Assembly-CSharp
-        m_MethodName: SelectSpawner
+        m_MethodName: SelectPlaceable
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 1
+          m_IntArgument: 5
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -1271,7 +1269,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 330585548}
         m_TargetAssemblyTypeName: PlacementController, Assembly-CSharp
-        m_MethodName: SelectBelt
+        m_MethodName: SelectPlaceable
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2329,7 +2327,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 330585548}
         m_TargetAssemblyTypeName: PlacementController, Assembly-CSharp
-        m_MethodName: SelectBelt
+        m_MethodName: SelectPlaceable
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2519,7 +2517,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 330585548}
         m_TargetAssemblyTypeName: PlacementController, Assembly-CSharp
-        m_MethodName: SelectBelt
+        m_MethodName: SelectPlaceable
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2652,12 +2650,12 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 330585548}
         m_TargetAssemblyTypeName: PlacementController, Assembly-CSharp
-        m_MethodName: SelectSpawner
+        m_MethodName: SelectPlaceable
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
+          m_IntArgument: 4
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 0
@@ -3027,7 +3025,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 330585548}
         m_TargetAssemblyTypeName: PlacementController, Assembly-CSharp
-        m_MethodName: SelectBelt
+        m_MethodName: SelectPlaceable
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

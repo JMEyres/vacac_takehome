@@ -5,31 +5,37 @@ using UnityEngine.InputSystem;
 
 public class PlacementController : MonoBehaviour
 {
-    public List<GameObject> beltPrefabs = new List<GameObject>();
-    public List<GameObject> spawnerPrefabs = new List<GameObject>();
-    public List<ConveyorMovement> placedConveyors = new List<ConveyorMovement>();
-    public List<Spawner> placedSpawners = new List<Spawner>();
+    public List<GameObject> prefabs = new List<GameObject>();
+    public List<Placeable> placedObjects = new List<Placeable>();
     public float yawStep = 15.0f;
     public float snapRadius = 1.0f;
     private GameObject currentPreview;
     float currentYaw = 0.0f;
-    private ConveyorMovement prevConveyor, nextConveyor, currentConveyor;
-    private Spawner currentSpawner;
+    private Placeable currentPlaceable;
+    private Port currentPort, targetPort;
     int selectedIndex = -1;
-    bool isSpawner = false;
+    int snapIndex = -1;
+    bool snappedToExit = false;
 
     [SerializeField] private LayerMask groundLayer;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        placedConveyors.AddRange(FindObjectsByType<ConveyorMovement>());
-        placedSpawners.AddRange(FindObjectsByType<Spawner>());
+        placedObjects.AddRange(FindObjectsByType<Placeable>());
 
-        foreach (ConveyorMovement belt in placedConveyors)
+        foreach (Placeable obj in placedObjects)
         {
-            if (belt.nextConveyor != null)
+            if (obj.TryGetComponent<ConveyorMovement>(out ConveyorMovement belt) && belt.nextConveyor != null)
             {
-                belt.nextConveyor.prevConveyor = belt;
+                Placeable nextPlaceable = belt.nextConveyor.GetComponent<Placeable>();
+                if (nextPlaceable != null && obj.exits.Count > 0 && nextPlaceable.entries.Count > 0)
+                {
+                    obj.exits[0].isOccupied = true;
+                    obj.exits[0].connectedPort = nextPlaceable.entries[0];
+
+                    nextPlaceable.entries[0].isOccupied = true;
+                    nextPlaceable.entries[0].connectedPort = obj.exits[0];
+                }
             }
         }
     }
@@ -38,16 +44,16 @@ public class PlacementController : MonoBehaviour
     void Update()
     {
         if(Keyboard.current != null && Keyboard.current.digit1Key.wasPressedThisFrame){ 
-            SelectBelt(0);
+            SelectPlaceable(0);
         }
         if(Keyboard.current != null && Keyboard.current.digit2Key.wasPressedThisFrame){
-            SelectBelt(1);
+            SelectPlaceable(1);
         }
         if(Keyboard.current != null && Keyboard.current.digit3Key.wasPressedThisFrame){
-            SelectBelt(2);
+            SelectPlaceable(2);
         }
         if(Keyboard.current != null && Keyboard.current.digit4Key.wasPressedThisFrame){
-            SelectBelt(3);
+            SelectPlaceable(3);
         }
         if(Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame){
             selectedIndex = -1;
@@ -59,23 +65,26 @@ public class PlacementController : MonoBehaviour
             {
                 Destroy(currentPreview);
                 currentPreview = null;
-                currentConveyor = null;
-                currentSpawner = null;
+                currentPlaceable = null;
             }
             return;
         }
 
         if(currentPreview == null)
         {
-            if (!isSpawner) currentPreview = Instantiate(beltPrefabs[selectedIndex]);
-            else currentPreview = Instantiate(spawnerPrefabs[selectedIndex]);
+            currentPreview = Instantiate(prefabs[selectedIndex]);
             currentPreview.transform.rotation = Quaternion.Euler(0f, currentYaw, 0f);
+            currentPlaceable = currentPreview.GetComponent<Placeable>();
             foreach (Collider col in currentPreview.GetComponentsInChildren<Collider>())
             {
                 col.enabled = false;
             }
-            if(currentPreview.TryGetComponent<ConveyorMovement>(out currentConveyor)){currentConveyor.enabled = false;}
-            else if (currentPreview.TryGetComponent<Spawner>(out currentSpawner)){currentSpawner.enabled = false;}
+
+            foreach (MonoBehaviour script in currentPreview.GetComponents<MonoBehaviour>())
+            {
+                if (script != currentPlaceable) script.enabled = false;
+            }
+            
         }
 
         float scrollY = Mouse.current != null ? Mouse.current.scroll.ReadValue().y : 0f;
@@ -87,136 +96,93 @@ public class PlacementController : MonoBehaviour
 
         Ray cursorPos = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-        if(currentConveyor != null)
-        {   
-            if (Physics.Raycast(cursorPos, out RaycastHit hit, 100f, groundLayer))
-            {
-                currentPreview.transform.position = hit.point;
-                currentPreview.transform.position += currentPreview.transform.position - currentConveyor.groundAnchor.transform.position;
-            }
-            
-            prevConveyor = null;
-            nextConveyor = null;
-            float closestDist = snapRadius;
-
-            foreach(ConveyorMovement belt in placedConveyors)
-            {
-                if (belt.nextConveyor == null)
-                { 
-                    float dist = HorizontalDistance(currentConveyor.entry.transform.position, belt.exit.transform.position);
-                    if (dist < closestDist)
-                    {
-                        closestDist = dist;
-                        prevConveyor = belt;
-                        nextConveyor = null;
-                    }
-                }
-                if (belt.prevConveyor == null)
-                {
-                    float dist2 = HorizontalDistance(currentConveyor.exit.transform.position, belt.entry.transform.position);
-                    if (dist2 < closestDist)
-                    {
-                        closestDist = dist2;
-                        nextConveyor = belt;
-                        prevConveyor = null;
-                    }
-                }
-            }
-
-            if(prevConveyor != null) {currentPreview.transform.position += prevConveyor.exit.transform.position - currentConveyor.entry.transform.position;}
-            if(nextConveyor != null) {currentPreview.transform.position += nextConveyor.entry.transform.position - currentConveyor.exit.transform.position;}
-
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
-
-            if(Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) {
-                GameObject spawnedBelt = Instantiate(beltPrefabs[selectedIndex], currentPreview.transform.position, currentPreview.transform.rotation);
-                ConveyorMovement newConveyor = spawnedBelt.GetComponent<ConveyorMovement>();
-                if (prevConveyor != null)
-                {
-                    prevConveyor.nextConveyor = newConveyor;
-                    newConveyor.prevConveyor = prevConveyor;
-                }
-                if (nextConveyor != null)
-                {
-                    newConveyor.nextConveyor = nextConveyor;
-                    nextConveyor.prevConveyor = newConveyor;
-                }
-                if (newConveyor != null) placedConveyors.Add(newConveyor);
-                selectedIndex = -1;
-                currentYaw = 0.0f;
-            }
-        }
-
-        else
+         
+        if (Physics.Raycast(cursorPos, out RaycastHit hit, 100f, groundLayer))
         {
-            if (Physics.Raycast(cursorPos, out RaycastHit hit, 100f, groundLayer))
-            {
-                currentPreview.transform.position = hit.point;
-                currentPreview.transform.position += currentPreview.transform.position - currentSpawner.ground.transform.position;
-            }
-            
-            prevConveyor = null;
-            nextConveyor = null;
-            float closestDist = snapRadius;
+            currentPreview.transform.position = hit.point;
+            currentPreview.transform.position += currentPreview.transform.position - currentPlaceable.groundAnchor.transform.position;
+        }
+        
+        currentPort = null;
+        targetPort = null;
+        snappedToExit = false;
+        snapIndex = -1;
+        float closestDist = snapRadius;
 
-            foreach(ConveyorMovement belt in placedConveyors)
+        foreach(Placeable obj in placedObjects)
+        {
+            for (int i = 0; i < currentPlaceable.entries.Count; i++)
             {
-                if (belt.prevConveyor == null)
+                foreach (Port theirExit in obj.exits)
                 {
-                    float dist2 = HorizontalDistance(currentSpawner.exit.transform.position, belt.entry.transform.position);
-                    if (dist2 < closestDist)
+                    if(!theirExit.isOccupied)
                     {
-                        closestDist = dist2;
-                        nextConveyor = belt;
-                        prevConveyor = null;
+                        float dist = HorizontalDistance(currentPlaceable.entries[i].transform.position, theirExit.transform.position);
+                         if (dist < closestDist)
+                        {
+                            closestDist = dist;
+                            currentPort = currentPlaceable.entries[i];
+                            targetPort = theirExit;
+                            snapIndex = i;
+                            snappedToExit = false;
+                        }
                     }
                 }
             }
-            if(nextConveyor != null) {currentPreview.transform.position += nextConveyor.entry.transform.position - currentSpawner.exit.transform.position;}
-
-            if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
-
-            if(Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) {
-                GameObject spawnedSpawner = Instantiate(spawnerPrefabs[selectedIndex], currentPreview.transform.position, currentPreview.transform.rotation);
-                Spawner newSpawner = spawnedSpawner.GetComponent<Spawner>();
-                if (nextConveyor != null)
+            for (int i = 0; i < currentPlaceable.exits.Count; i++)
+            {
+                foreach (Port theirEntry in obj.entries)
                 {
-                    newSpawner.nextConveyor = nextConveyor;
-                    
+                    if (!theirEntry.isOccupied)
+                    {
+                        float dist = HorizontalDistance(currentPlaceable.exits[i].transform.position, theirEntry.transform.position);
+                         if (dist < closestDist)
+                        {
+                            closestDist = dist;
+                            currentPort = currentPlaceable.exits[i];
+                            targetPort = theirEntry;
+                            snapIndex = i;
+                            snappedToExit = true;
+                        }
+                    }
                 }
-                if (newSpawner != null) placedSpawners.Add(newSpawner);
-                selectedIndex = -1;
-                currentYaw = 0.0f;
             }
         }
+
+        if(currentPort != null) {currentPreview.transform.position += targetPort.transform.position - currentPort.transform.position;}
+
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+
+        if(Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) {
+            GameObject spawnedPlaceable = Instantiate(prefabs[selectedIndex], currentPreview.transform.position, currentPreview.transform.rotation);
+            Placeable newPlaceable = spawnedPlaceable.GetComponent<Placeable>();
+            if(currentPort != null)
+            {
+                Port newPort = snappedToExit ? newPlaceable.exits[snapIndex] : newPlaceable.entries[snapIndex];
+                newPort.isOccupied = true;
+                targetPort.isOccupied = true;
+
+                newPort.connectedPort = targetPort;
+                targetPort.connectedPort = newPort;
+            }
+
+            if (newPlaceable != null) placedObjects.Add(newPlaceable);
+            selectedIndex = -1;
+            currentYaw = 0.0f;
+        }
+        
     }
 
-    public void SelectBelt(int index)
+    public void SelectPlaceable(int index)
     {
         if (currentPreview != null)
         {
             Destroy(currentPreview);
             currentPreview = null;
-            currentConveyor = null;
-            currentSpawner = null;
+            currentPlaceable = null;
         }
         currentYaw = 0.0f;
         selectedIndex = index; 
-        isSpawner = false;
-    }
-
-    public void SelectSpawner(int index)
-    {
-        if (currentPreview != null)
-        {
-            Destroy(currentPreview);
-            currentPreview = null;
-            currentConveyor = null;
-            currentSpawner = null;
-        }
-        currentYaw = 0.0f;
-        selectedIndex = index; 
-        isSpawner = true;
     }
 
     float HorizontalDistance(Vector3 a, Vector3 b)

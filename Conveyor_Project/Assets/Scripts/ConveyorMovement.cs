@@ -10,7 +10,12 @@ public class ConveyorMovement : MonoBehaviour
     public float speed =1.0f;
     private float pathDistance = 0.0f;
     private Vector3 beltDirection;
-    
+    private Placeable placeable;
+    void Awake()
+    {
+        placeable = GetComponent<Placeable>();
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -31,14 +36,23 @@ public class ConveyorMovement : MonoBehaviour
             itemsOnConveyor[i].distanceTravelled +=Time.deltaTime * speed;
 
             if(itemsOnConveyor[i].distanceTravelled >= pathDistance) { 
+                Port connectedExit = placeable.exits[0].connectedPort;
                 ConveyorItem currentItem = itemsOnConveyor[i];
                 itemsOnConveyor.RemoveAt(i);
 
-                if(nextConveyor == null) { currentItem.gameObject.GetComponent<Rigidbody>().isKinematic = false; continue;}
+                if(connectedExit == null) { currentItem.gameObject.GetComponent<Rigidbody>().isKinematic = false; continue;}
 
-                currentItem.distanceTravelled = currentItem.distanceTravelled - pathDistance;
-                currentItem.currentConveyor = nextConveyor.gameObject;
-                nextConveyor.itemsOnConveyor.Add(currentItem);
+                if (connectedExit.Owner.TryGetComponent(out ConveyorMovement nextBelt))
+                {
+                    currentItem.distanceTravelled = currentItem.distanceTravelled - pathDistance;
+                    currentItem.currentConveyor = nextBelt.gameObject;
+                    nextBelt.itemsOnConveyor.Add(currentItem);
+                }
+                else
+                {
+                    currentItem.gameObject.GetComponent<Rigidbody>().isKinematic = false; 
+                    continue;
+                }
             }
 
             else
