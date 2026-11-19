@@ -11,12 +11,12 @@ public class DepositBox : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if(other.gameObject.tag == "Can")
+        if(other.gameObject.CompareTag("Can"))
         {
             depositUI.cansDeposited++;
         }
 
-        if(other.gameObject.tag == "Box")
+        if(other.gameObject.CompareTag("Box"))
         {
             depositUI.boxesDeposited++;
         }

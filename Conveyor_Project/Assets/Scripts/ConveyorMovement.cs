@@ -6,7 +6,7 @@ public class ConveyorMovement : MonoBehaviour
 {
     public GameObject entry, exit, groundAnchor;
     public ConveyorMovement nextConveyor, prevConveyor;
-    private List<ConveyorItem> itemsOnConveyor = new List<ConveyorItem>();
+    public List<ConveyorItem> itemsOnConveyor = new List<ConveyorItem>();
     public float speed =1.0f;
     private float pathDistance = 0.0f;
     private Vector3 beltDirection;
