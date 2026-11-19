@@ -59,8 +59,8 @@ public class ConveyorMovement : MonoBehaviour
         if (other.attachedRigidbody != null) other.attachedRigidbody.isKinematic = true;
 
         float t = item.distanceTravelled/pathDistance;
-        other.transform.position = Vector3.Lerp(entry.transform.position, exit.transform.position, t);
+        other.transform.position = Vector3.Lerp(entry.transform.position, exit.transform.position, t); // set the position relative to the distance along the belt
 
-        itemsOnConveyor.Add(item);
+        itemsOnConveyor.Add(item); // add to conveyors list
     }
 }
