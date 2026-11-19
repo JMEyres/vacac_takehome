@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
 
 public class PlacementController : MonoBehaviour
@@ -68,8 +69,10 @@ public class PlacementController : MonoBehaviour
             currentConveyor.enabled = false;
         }
 
-        if(Keyboard.current != null && Keyboard.current.qKey.wasPressedThisFrame){currentYaw -= yawStep; currentYaw %= 360f;}
-        if(Keyboard.current != null && Keyboard.current.eKey.wasPressedThisFrame){currentYaw += yawStep; currentYaw %= 360f;}
+        float scrollY = Mouse.current != null ? Mouse.current.scroll.ReadValue().y : 0f;
+
+        if(scrollY > 0f){currentYaw += yawStep; currentYaw %= 360f;}
+        if(scrollY < 0f){currentYaw -= yawStep; currentYaw %= 360f;}
 
         currentPreview.transform.rotation = Quaternion.Euler(0f, currentYaw, 0f);
 
@@ -112,6 +115,8 @@ public class PlacementController : MonoBehaviour
         if(prevConveyor != null) {currentPreview.transform.position += prevConveyor.exit.transform.position - currentConveyor.entry.transform.position;}
         if(nextConveyor != null) {currentPreview.transform.position += nextConveyor.entry.transform.position - currentConveyor.exit.transform.position;}
 
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+
         if(Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) {
             GameObject spawnedBelt = Instantiate(beltPrefabs[selectedIndex], currentPreview.transform.position, currentPreview.transform.rotation);
             ConveyorMovement newConveyor = spawnedBelt.GetComponent<ConveyorMovement>();
@@ -131,7 +136,7 @@ public class PlacementController : MonoBehaviour
         }
     }
 
-    void SelectBelt(int index)
+    public void SelectBelt(int index)
     {
         if (currentPreview != null)
         {
