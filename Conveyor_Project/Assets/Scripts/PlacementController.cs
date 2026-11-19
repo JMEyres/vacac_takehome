@@ -55,7 +55,7 @@ public class PlacementController : MonoBehaviour
         if(Keyboard.current != null && Keyboard.current.digit4Key.wasPressedThisFrame){
             SelectPlaceable(3);
         }
-        if(Keyboard.current != null && Keyboard.current.escapeKey.wasPressedThisFrame){
+        if(Mouse.current != null && Mouse.current.rightButton.wasPressedThisFrame){
             selectedIndex = -1;
         }
 
@@ -96,7 +96,6 @@ public class PlacementController : MonoBehaviour
 
         Ray cursorPos = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
-         
         if (Physics.Raycast(cursorPos, out RaycastHit hit, 100f, groundLayer))
         {
             currentPreview.transform.position = hit.point;
