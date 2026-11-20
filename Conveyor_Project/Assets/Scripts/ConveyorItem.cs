@@ -1,5 +1,7 @@
 using UnityEngine;
-
+/// <summary>
+/// Stores basic information on each item
+/// </summary>
 public class ConveyorItem : MonoBehaviour
 {
     public float distanceTravelled = 0.0f;

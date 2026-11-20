@@ -1,5 +1,7 @@
 using UnityEngine;
-
+/// <summary>
+/// Simply destroys the item when it hits the collider and iterates deposited count
+/// </summary>
 public class DepositBox : MonoBehaviour
 {
     private DepositUI depositUI;

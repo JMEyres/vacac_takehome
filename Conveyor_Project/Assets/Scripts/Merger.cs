@@ -2,6 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+  /// <summary>
+    /// Handles merging items from two conveyors onto a single conveyor using FIFO Queue
+    /// Outputs based on split time variable and just teleports the item dropping it onto the next conveyor
+    /// </summary>
 public class Merger : MonoBehaviour
 {
     private Queue<GameObject> items = new Queue<GameObject>();
@@ -13,11 +17,6 @@ public class Merger : MonoBehaviour
     void Awake()
     {
         placeable = GetComponent<Placeable>();
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
     }
 
     // Update is called once per frame

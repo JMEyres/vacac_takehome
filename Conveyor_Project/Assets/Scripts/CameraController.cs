@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-
+/// <summary>
+/// Handles free-fly viewport camera look and movement while right-click is held
+/// </summary>
 public class CameraController : MonoBehaviour
 {
     public float lookSensitivity = 0.1f;
@@ -10,6 +12,7 @@ public class CameraController : MonoBehaviour
 
     void Start()
     {
+        // Initialize variables to avoid any snapping
         yaw = transform.eulerAngles.y;
         pitch = transform.eulerAngles.x;
     }

@@ -1,5 +1,7 @@
 using UnityEngine;
-
+/// <summary>
+/// Handles spawning items by instantiating the item at the spawn points location
+/// </summary>
 public class Spawner : MonoBehaviour
 {
     public Transform exit, ground, spawn;
@@ -8,11 +10,6 @@ public class Spawner : MonoBehaviour
 
     public float spawnTime = 1.0f;
     float timer = 0.0f;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()

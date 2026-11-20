@@ -2,7 +2,9 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-
+/// <summary>
+/// Manages ghost preview instantiation, ground anchor alignment, port snapping, and runtime placement/linking of modular factory components.
+/// </summary>
 public class PlacementController : MonoBehaviour
 {
     public List<GameObject> prefabs = new List<GameObject>();
@@ -21,6 +23,7 @@ public class PlacementController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        // Register pre-placed scene objects and link their port references so runtime pieces can snap to them
         placedObjects.AddRange(FindObjectsByType<Placeable>());
 
         foreach (Placeable obj in placedObjects)
@@ -72,6 +75,7 @@ public class PlacementController : MonoBehaviour
 
         if(currentPreview == null)
         {
+            // Disable colliders and machine logic on the ghost preview so it doesn't interfere with raycasts or active items
             currentPreview = Instantiate(prefabs[selectedIndex]);
             currentPreview.transform.rotation = Quaternion.Euler(0f, currentYaw, 0f);
             currentPlaceable = currentPreview.GetComponent<Placeable>();
@@ -96,6 +100,7 @@ public class PlacementController : MonoBehaviour
 
         Ray cursorPos = Camera.main.ScreenPointToRay(Mouse.current.position.ReadValue());
 
+        // Offset by groundAnchor to sit flush on the floor
         if (Physics.Raycast(cursorPos, out RaycastHit hit, 100f, groundLayer))
         {
             currentPreview.transform.position = hit.point;
@@ -108,6 +113,7 @@ public class PlacementController : MonoBehaviour
         snapIndex = -1;
         float closestDist = snapRadius;
 
+        // Find the closest open port to snap to (checks both entry-to-exit and exit-to-entry)
         foreach(Placeable obj in placedObjects)
         {
             for (int i = 0; i < currentPlaceable.entries.Count; i++)
@@ -150,11 +156,13 @@ public class PlacementController : MonoBehaviour
 
         if(currentPort != null) {currentPreview.transform.position += targetPort.transform.position - currentPort.transform.position;}
 
+        // Prevent clicking toolbar UI buttons from accidentally placing an object underneath the cursor
         if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
 
         if(Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame) {
             GameObject spawnedPlaceable = Instantiate(prefabs[selectedIndex], currentPreview.transform.position, currentPreview.transform.rotation);
             Placeable newPlaceable = spawnedPlaceable.GetComponent<Placeable>();
+            // Bind port references on the newly spawned instance and mark both sockets occupied
             if(currentPort != null)
             {
                 Port newPort = snappedToExit ? newPlaceable.exits[snapIndex] : newPlaceable.entries[snapIndex];
@@ -183,7 +191,8 @@ public class PlacementController : MonoBehaviour
         currentYaw = 0.0f;
         selectedIndex = index; 
     }
-
+    
+    // Compare XZ plane distance so incline/decline ports at different heights still snap cleanly
     float HorizontalDistance(Vector3 a, Vector3 b)
     {
         return Vector2.Distance(new Vector2(a.x, a.z), new Vector2(b.x, b.z));

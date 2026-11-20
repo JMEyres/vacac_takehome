@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// Handles splitting and sorting one conveyor belt into two
+/// </summary>
 public class Splitter : MonoBehaviour
 {
     private Queue<GameObject> items = new Queue<GameObject>();
@@ -12,11 +14,6 @@ public class Splitter : MonoBehaviour
     void Awake()
     {
         placeable = GetComponent<Placeable>();
-    }
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
     }
 
     // Update is called once per frame
@@ -30,6 +27,7 @@ public class Splitter : MonoBehaviour
             if (items.Count > 0) 
             {
                 GameObject obj = items.Dequeue();
+                // Check the item tag, in future this would be better as an id to handle more items and split automatically
                 if(obj.CompareTag("Can"))
                 {  
                     obj.TryGetComponent<ConveyorItem>(out ConveyorItem item);

@@ -1,22 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
-
+/// <summary>
+/// Stores information for every placeable object, with an option for debug gizmos
+/// </summary>
 public class Placeable : MonoBehaviour
 {
     public Transform groundAnchor;
     public List<Port> entries = new List<Port>();
     public List<Port> exits = new List<Port>();
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 
     void OnDrawGizmos()
     {

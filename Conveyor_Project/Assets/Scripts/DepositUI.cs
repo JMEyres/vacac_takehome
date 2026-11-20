@@ -1,15 +1,12 @@
 using TMPro;
 using UnityEngine;
-
+/// <summary>
+/// Handles updating the deposit count UI
+/// </summary>
 public class DepositUI : MonoBehaviour
 {
     public int cansDeposited = 0, boxesDeposited = 0;
     public TextMeshProUGUI canCount, boxCount;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
